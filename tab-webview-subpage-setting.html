@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="css/mlayout.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mbase.css"/>
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">设置</h1>
+		</header>-->
+		<div class="mui-content">
+			<div class="more-block" id="more_block">
+				<h1 class="ui-h1">关于我们</h1>
+				<ul>
+					<li class="icon-input ui-more" data-href = "common.html" data-exhref = "/app_page/index?tag=about" data-title="关于我们">
+						<p class="icon"><img src="images/drawable-hdpi/p_about.png"/></p>
+						<div class="content">关于我们</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "common.html" data-exhref = "/app_page/index?tag=user_rule" data-title = "货主守则">
+						<p class="icon"><img src="images/drawable-hdpi/p_rule.png"/></p>
+						<div class="content">货主守则</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "common.html" data-exhref = "/price/" data-title = "收费表">
+						<p class="icon"><img src="images/drawable-hdpi/p_price.png"/></p>
+						<div class="content">收费表</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "common.html" data-exhref = "/app_page/index?tag=user_faq" data-title = "常见问题">
+						<p class="icon"><img src="images/drawable-hdpi/p_question.png"/></p>
+						<div class="content">常见问题</div>
+					</li>
+				</ul>
+				<h1 class="ui-h1">其他</h1>
+				<ul>
+					<li class="icon-input ui-more" id="share" data-href = "share">
+						<p class="icon"><img src="images/drawable-hdpi/p_share.png"/></p>
+						<div class="content">分享</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "common.html" data-exhref = "/wx/" data-title = "教学">
+						<p class="icon"><img src="images/drawable-hdpi/p_learn.png"/></p>
+						<div class="content">教学</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "app/user/feedback.html" data-exhref = "" data-title = "意见反馈">
+						<p class="icon"><img src="images/drawable-hdpi/p_advice.png"/></p>
+						<div class="content">意见反馈</div>
+					</li>
+					<li class="icon-input ui-more" style="display: none">
+						<p class="icon"><img src="images/drawable-hdpi/p_setting.png"/></p>
+						<div class="content">设置</div>
+					</li>
+				</ul>
+			</div>
+			<ul class="mui-table-view" style="margin-top: 25px;">
+					<li class="mui-table-view-cell">
+						<a href="javascript:;" id="login_out" style="text-align: center;color: #FF3B30;">
+							退出登录
+						</a>
+					</li>
+			</ul>
+		</div>
+	</body>
+	
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/config.js" ></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		
+		mui("#more_block").on("tap","li",function(){
+				var this_url=this.dataset.href;
+				var ex_url=this.dataset.exhref;
+				var title=this.dataset.title;
+				if(this_url!=""){
+					mui.openWindow({
+					     id:this.id,
+					     url:this_url,
+					     extras:{
+						     href:config.url.hrefhost+ex_url,
+						     title:title
+						 }
+					})
+				}else if(this_url=="share"){
+					
+				}
+				
+		})
+		document.querySelector("#login_out").addEventListener("tap",function(){
+			plus.storage.setItem("user_data",JSON.stringify({}));
+			mui.openWindow({
+					id:'login.html',
+					url:'/app/user/login.html'		
+				});
+		},false)
+//		document.getElementById("about").addEventListener('tap',function () {
+//			//获得主页面的webview
+//			var main = plus.webview.currentWebview().parent();
+//			//触发主页面的gohome事件
+//			mui.fire(main,'gohome');
+//		});
+	</script>
+</html>

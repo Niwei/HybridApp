@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/app.css" />
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 id="title" class="mui-title">货主登录</h1>
+		</header>
+		<div class="mui-content">
+			<div id='login-form' class="input-group">
+				<div class="input-row">
+					
+					<input type="text" name="mobile" id="mobile" value="" placeholder="请输入手机号码"/>
+				</div>
+				<div class="input-row">
+					
+					<input type="password" name="password" id="password" value="" placeholder="请输入密码" />
+				</div>
+			</div>
+			<button  id="login" class="mui-btn mui-btn-positive mui-btn-block"  />登录</button>
+			<div class="cf login-bottom link-area">
+				<a id="register" class="">注册账号</a>
+				<span class="spliter">|</span>
+				<a id="forgetPassword" class="">忘记密码</a>
+			</div>
+			
+		</div>
+	</body>
+	<script src="../../js/global.js" ></script>
+	<script src="../../js/config.js" ></script>
+	<script src="../../js/mui.min.js"></script>
+	<script>
+		mui.init({
+				swipeBack: false,
+//				beforeback:function(){
+//					var backPage = plus.webview.getWebviewById('place_order.html'); //a为 a页面的id值
+//					mui.fire(backPage,'custom',{a:120});
+//				}
+			});
+		 var ajax_status=true;
+		 var regButton = document.getElementById('register');
+		 var forgetButton = document.getElementById('forgetPassword');
+		 regButton.addEventListener('tap', function(event) {
+		 mui.openWindow({
+				url: 'register.html',
+				id: 'register',
+				show: {
+					aniShow: 'pop-in'
+				},
+				styles: {
+					popGesture: 'hide'
+				},
+				waiting: {
+					autoShow: false
+				}
+			});
+		 }, false);
+		 forgetButton.addEventListener('tap', function(event) {
+			mui.openWindow({
+				url: 'forget_password.html',
+				id: 'forget_password',
+				show: {
+					aniShow: 'pop-in'
+				},
+				styles: {
+					popGesture: 'hide'
+				},
+				waiting: {
+					autoShow: false
+				}
+			});
+		 }, false);
+		 document.querySelector('#login').addEventListener("tap",function(e){
+		    var mobile = document.querySelector("#mobile").value;
+		    if(!check_value('mobile',mobile,'mobile')){return false};
+		    
+		    var password = document.querySelector("#password").value;
+		    if(!check_value('password',password,'password')){return false};
+			
+		    ajax(mobile,password);
+		
+		    return false;
+		  });
+		 mui.plusReady(function() {
+		 	var self = plus.webview.currentWebview()
+		 	//alert(self.is);
+		 })
+		function ajax(mobile,password){
+				ajax_status=false;
+				mui.ajax(config.url.host+"/login",{
+				data:{
+					mobile:mobile,
+					password:password
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'POST',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(info){
+					 if(info.code==1000){
+					 	var d=JSON.stringify(info.data)
+					 	plus.storage.setItem("user_data",d);
+					 	plus.webview.currentWebview().close();
+					 	var main = plus.webview. getLaunchWebview();
+					 	mui.fire(main,'gohome');
+					 }else{
+					 	mui.toast(info.message);
+					 }
+					 ajax_status=true;
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+					mui.toast(config.err.xhr);
+					ajax_status=true;  
+					
+				}
+			});
+		}
+		function is_mobile(s){
+			return /^1[3|4|5|7|8]\d{9}$/.test(s);
+		}
+
+		function is_password(s){
+			return /^(\w){6,12}$/.test(s);
+		}
+		var check_value = function(name, val, type){
+			if(type=='mobile'){
+				return input_tip(name,is_mobile(val),'请输入正确的手机！');
+				
+			}else if(type=='password'){
+				return input_tip(name,is_password(val),'请输入6-12位密码！');
+			}
+		}
+		var input_tip = function(name , valid, msg){
+			valid?"":mui.toast(msg);		
+			return valid;
+		}
+		var first = null;
+		mui.back = function() {
+			//首次按键，提示‘再按一次退出应用’
+			if (!first) {
+				first = new Date().getTime();
+				mui.toast('再按一次退出应用');
+				setTimeout(function() {
+					first = null;
+				}, 1000);
+			} else {
+				if (new Date().getTime() - first < 1000) {
+					plus.runtime.quit();
+				}
+			}
+			};
+
+	</script>
+</html>

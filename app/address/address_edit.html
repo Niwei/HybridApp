@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mlayout.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mbase.css"/>
+		<style>
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">编辑常用地址</h1>
+			<a id="delete" class="mui-icon mui-icon-trash mui-pull-right" style="color: #fff;"></a>
+		</header>
+		<div class="mui-content">
+			<!--order-block start-->
+			<div class="edit-block">
+				<div class="icon-input" data-type="start">
+						<p class="icon"></p>
+						<div  class="address-text content"><input type="text" name="name" id="name" value="" placeholder="请填写线路名称" /></div>
+				</div>
+				<ul class="edit-address address-color">
+					
+					<li class="icon-input" data-type="start">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_addr_start.png"/></p>
+						<div  class="address-text content start-address" id="start_address_text" >添加发货地址</div>
+					</li>
+					<div class="line"></div>
+					<li class="icon-input" data-type="end">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_addr_end.png"/></p>
+						<div  class="address-text content end-address" id="end_address_text" >添加收货地址</div>
+					</li>
+				</ul>
+				<p  id="save_address" class="mui-btn mui-btn-positive mui-btn-block mt10"/>确认</p>
+			</div>
+			<!--order-block end-->
+		</div>
+	</body>
+	<script src="../../js/md5-min.js"></script>
+	<script src="../../js/zepto.min.js" ></script>
+	<script src="../../js/global.js" ></script>
+	<script src="../../js/config.js" ></script>
+	<script src="../../js/doT.min.js" ></script>
+	<script src="../../js/mui.min.js"></script>
+	<script>
+		
+		var address_info={
+			name:"",
+			address_id:"",
+			user_id:"",
+			start_name:"",
+			start_address:"",
+			start_lat:"",
+			start_lng:"",
+			start_mobile:"",
+			start_consignee:"",
+			end_name:"",
+			end_address:"",
+			end_lat:"",
+			end_lng:"",
+			end_consignee:"",
+			end_mobile:"",
+			t:"",
+			s:""
+		};
+		var start_address_info={
+			start_name:"",
+			start_address:"",
+			start_lat:"",
+			start_lng:"",
+			start_mobile:"",
+			start_consignee:""
+		}
+		var end_address_info={
+			end_name:"",
+			end_address:"",
+			end_lat:"",
+			end_lng:"",
+			end_consignee:"",
+			end_mobile:"",
+		}
+		var tpl_commont="",tpl = "",addressType="",Type="",arrhtml="",session_id="",time="",sign="",Waiting="",address_name=document.querySelector("#name"),deletAd=document.querySelector("#delete");
+		mui.init({
+				swipeBack: false
+				
+			});
+			mui.plusReady(function() {
+				session_id = config.getInfo().app_session_id;
+				address_info.user_id=config.com.userId;
+				time = Date.parse(new Date());
+				address_info.t=time;
+				sign=hex_md5(session_id+time+config.com.userId);
+				address_info.s=sign;
+				var self = plus.webview.currentWebview();
+				var _data=self.address_data;
+				var removehide=self.removehide;
+				for(var i in _data){
+					address_info[i]=_data[i];
+				}
+				if(removehide==false){
+					deletAd.style.display="none";
+				}
+				if(_data!=false){
+					address_name.value=_data.name;
+					editdata(_data)
+				}
+				mui('.edit-address').on('tap', 'li', function(e) {
+					 var strHref = this.getAttribute('href');
+					 addressType=this.dataset.type;
+					 plus.storage.setItem("pageId","address_edit.html");
+					 mui.openWindow({
+		                id:"address.html",
+		                url:"../address/address.html"
+		            });
+		       	});
+	           //地址填写参数获取
+	           	window.addEventListener('custom',function(event){
+					  //获得事件参数
+					 var data  = event.detail.data;		 
+					 for (var i in data) {
+					 	address_info[addressType+"_"+i]=data[i];
+					 	//$("#"+addressType+"_"+i).val(data[i]);
+					 }
+					 $("#"+addressType+"_address_text").html(inputRendy(address_info,addressType));
+				});
+           	//常用地址获取参数
+           	window.addEventListener('com',function(event){
+				 //获得事件参数
+				 var data  = event.detail.data;	 
+				 $("#start_address_text").html(inputRendy(data,"start"));
+				 $("#end_address_text").html(inputRendy(data,"end"));
+				 for (var i in data) {
+				 	 address_info[i]=data[i]
+				 }
+			});
+			document.querySelector("#save_address").addEventListener("tap",function(){
+				address_info.name=address_name.value;
+				if(checkData()){
+					ajax();
+				}
+				
+			})
+           })
+		
+		deletAd.addEventListener("tap",function(){
+			var btnArray = ['是','否'];
+		  	mui.confirm('删除后不可恢复，确认删除吗','删除确认',btnArray,function(e){
+		  		if(e.index==0){
+		  			 deleteAddress();
+		  		}else{
+		  			
+		  		}
+		  	})
+			
+		})
+		
+		
+		
+			
+			
+		function deleteAddress(){
+			Waiting = plus.nativeUI.showWaiting("正在加载...");
+			mui.ajax(config.url.host+"/address_remove",{
+				data:{
+					user_id:address_info.user_id,
+					address_id:address_info.address_id,
+					t:time,
+					s:sign
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'POST',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(d){
+					Waiting.close();
+					if(d.code==1000){
+						 var old_back = mui.back;
+						 mui.back=function(){
+						  	var main = plus.webview.getWebviewById("common_address.html");
+							mui.fire(main,'reload');
+						  	old_back()
+						 };
+						 mui.back();
+					}else{
+						mui.toast(d.message);
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					mui.toast(config.err.xhr);
+					console.log(type);
+				}
+			});
+		}
+		function inputRendy(data,t){	
+			var html="";
+				html+="<div class=''>";
+				if(data[t+'_name']!="null"){
+					html+="<span class='name'>"+data[t+'_name']+" </span>";
+				}
+				html+="<span class='address'>"+data[t+'_address']+"</span>";
+				html+="</div>";
+				html+="<div> ";
+					html+="收货人：<span class='username'>"+data[t+'_consignee']+"</span> 电话：<span class='mobile'>"+data[t+'_mobile']+"</span>";
+				html+="</div>";
+                return html;
+		}
+		
+		function ajax(){
+			Waiting = plus.nativeUI.showWaiting("正在加载...");
+			mui.ajax(config.url.host+"/address_new",{
+				data:address_info,
+				dataType:'json',//服务器返回json格式数据
+				type:'POST',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(d){
+					Waiting.close();
+					if(d.code==1000){
+							mui.alert('更新成功','提示','确认',function(){		           
+						  		var old_back = mui.back;
+								 mui.back=function(){
+								  	var main = plus.webview.getWebviewById("common_address.html");
+									mui.fire(main,'reload');
+								  	old_back()
+								 };
+								mui.back();
+								
+						  	});	
+					}else{
+						mui.toast(d.message);
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					mui.toast(config.err.xhr);
+					console.log(type);
+				}
+			});
+		}
+		function checkData(){
+			var t=false;
+			if(address_info.name==""){
+				mui.toast('请填写线路名称');
+				t=false;
+			}else if(address_info.start_address==""){
+						mui.toast('请填写发货地址');
+						t=false;
+			}else if(address_info.end_address==""){
+						mui.toast('请填写收货地址');
+						t=false;	
+			}else{
+						t=true;
+					}
+			return t;
+		}
+		function editdata(address_data){
+			for(var i in address_data){
+					address_info[i]=address_data[i];	
+				}
+			for(var j in start_address_info){
+				start_address_info[j]=address_data[j];
+			}
+			for(var k in end_address_info){
+				end_address_info[k]=address_data[k];
+			}
+			$("#start_address_text").html(inputRendy(start_address_info,"start"));
+			$("#end_address_text").html(inputRendy(end_address_info,"end"));
+		}
+	</script>
+</html>

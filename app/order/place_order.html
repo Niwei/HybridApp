@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link href="../../css/mui.listpicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mlayout.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mbase.css"/>
+		<style>
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">下单</h1>
+		</header>
+		<div class="mui-content">
+			<!--order-block start-->
+			<div class="order-block">
+				<div class="icon-input ui-more"  id="common_address">
+					<p class="icon"><img src="../../images/drawable-hdpi/order_address_recent.png"/></p>
+					<div class="content">常用地址添加</div>
+				</div>
+				<ul class="address-a address-color">
+					<li class="icon-input" data-type="start">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_addr_start.png"/></p>
+						<div  class="address-text content start-address" id="start_address_text" >添加发货地址</div>
+					</li>
+					<div class="line"></div>
+					<li class="icon-input" data-type="end">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_addr_end.png"/></p>
+						<div  class="address-text content end-address" id="end_address_text" >添加收货地址</div>
+					</li>
+				</ul>
+				<div class="icon-input" id="datetime">
+					<p class="icon"><img src="../../images/drawable-hdpi/order_time.png"/></p>
+					<div class="content" id="time">发货时间</div>
+				</div>
+				<form id="order_infro" class="" action="">
+					
+				<textarea name="description" class="description" id="description" placeholder="备注" rows="" cols=""></textarea>
+
+				</form>
+				<div id="price_block" class="info-block hide">
+					<ul>
+						<li class="cf">
+							<span class="fl">司机小费：</span> 
+							<div class="fl left-block"><span  id="js_tip_price"></span></div> 
+							<p class="mui-btn mui-btn-primary showbtn" id="showtipPicker">增加小费</p>
+						</li>
+						<li class="cf"><span class="fl">合计运费：</span> <div class="fl left-block"><span class="or_font" id="order_price"></span> <del id="market_price"></del></div></li>
+						<li class="cf"><span class="fl">预计里程：</span> <div class="fl left-block"><span class="or_font" id="distance"></span></div></li>
+						<li class="cf"><span class="fl">预计时间：</span> <div class="fl left-block"><span  id="duration"></span></div></li>
+					</ul>
+				</div>
+				<p  id="sure_order" class="mui-btn mui-btn-positive mui-btn-block"/>确认下单</p>
+				<!--picker 模块-->
+				<div class="date-panel mui-picker-panel">
+						<div class="mui-panel-header">
+							<button id='datePickerCancel' class="mui-btn">取消</button>
+							<button id='datePickerOK' class="mui-btn mui-btn-blue">确定</button>
+						</div>
+						<div class="mui-panel-body">
+							<div id='monthPicker' class="mui-listpicker">
+								<div class="mui-listpicker-inner">
+									<ul>
+									</ul>
+								</div>
+							</div>
+							<div id='hourPicker' class="mui-listpicker">
+								<div class="mui-listpicker-inner">
+									<ul>
+									</ul>
+								</div>
+							</div>
+							<div id='minutePicker' class="mui-listpicker">
+								<div class="mui-listpicker-inner">
+									<ul>
+									</ul>
+								</div>
+							</div>
+						</div>
+				</div>
+				<div class="tip-panel mui-picker-panel">
+						<div class="mui-panel-header">
+							<button id='tipPickerCancelBtn' class="mui-btn">取消</button>
+							<button id='tipPickerOKBtn' class="mui-btn mui-btn-blue">确定</button>
+						</div>
+						<div class="mui-panel-body">
+							<div id='tipPicker' class="mui-listpicker">
+								<div class="mui-listpicker-inner">
+									<ul>
+									</ul>
+								</div>
+							</div>
+							
+						</div>
+				</div>
+			</div>
+			<!--order-block end-->
+		</div>
+	</body>
+	<script src="../../js/md5-min.js"></script>
+	<script src="../../js/zepto.min.js" ></script>
+	<script src="../../js/global.js" ></script>
+	<script src="../../js/config.js" ></script>
+	<script src="../../js/doT.min.js" ></script>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/mui.listpicker.js"></script>
+	<script>
+		
+		var order_info={
+			user_id:"",
+			truck_type:"",
+			tip_price:"0",
+			order_time:"",
+			start_name:"",
+			start_address:"",
+			start_lat:"",
+			start_lng:"",
+			start_mobile:"",
+			start_consignee:"",
+			end_name:"",
+			end_address:"",
+			end_lat:"",
+			end_lng:"",
+			end_consignee:"",
+			end_mobile:"",
+			description:"",
+			t:"",
+			s:""
+		}
+		var tpl_commont="",tpl = "",addressType="",Type="",arrhtml="",session_id="";
+		mui.init({
+				swipeBack: false
+				
+			});
+		    //添加newId自定义事件监听
+//			window.addEventListener('carId',function(event){
+//			  //获得事件参数
+//			  order_info.truck_type = event.detail.id;
+//			  alert(order_info.truck_type)
+//			});
+			
+			
+			mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			order_info.truck_type=self.carId;
+			session_id = config.getInfo().app_session_id;
+			order_info.user_id=config.com.userId;
+			mui('.address-a').on('tap', 'li', function(e) {
+				var strHref = this.getAttribute('href');
+				 addressType=this.dataset.type;
+				 plus.storage.setItem("pageId","place_order.html");
+				 mui.openWindow({
+                    id:"address.html",
+                    url:"../address/address.html"
+	            });
+           	});
+           //地址填写参数获取
+           	window.addEventListener('custom',function(event){
+				  //获得事件参数
+				 var data  = event.detail.data;		 
+				 for (var i in data) {
+				 	order_info[addressType+"_"+i]=data[i];
+				 	//$("#"+addressType+"_"+i).val(data[i]);
+				 }
+				 $("#"+addressType+"_address_text").html(inputRendy(order_info,addressType));
+				 if((order_info.start_address&&order_info.end_address)!=""){
+				 	getPriceInfo(order_info);
+				 }
+			});
+			var comAdd = document.querySelector("#common_address");
+           	comAdd.addEventListener("tap",function(){
+           		plus.storage.setItem("isedit","no");
+           		mui.openWindow({
+                    id:"common_address.html",
+                    url:"../address/common_address.html",
+      		
+	            });
+           	},false);
+           	//常用地址获取参数
+           	window.addEventListener('com',function(event){
+				 //获得事件参数
+				 var data  = event.detail.data;		 
+				 $("#start_address_text").html(inputRendy(data,"start"));
+				 $("#end_address_text").html(inputRendy(data,"end"));
+				 for (var i in data) {
+				 	 order_info[i]=data[i]
+				 }
+				 getPriceInfo(order_info);
+			});
+			document.querySelector("#sure_order").addEventListener("tap",function(){
+				order_info.description=document.querySelector("#description").value;
+				if(checkData()){
+					ajax();
+				}
+				
+			})
+           })
+		
+		
+			mui.ready(function() {
+			var mask = mui.createMask(_hidePickerPanel);
+			var currentPanel = null;
+			//关闭弹出的选择面板
+			function _hidePickerPanel () {
+				if(currentPanel){
+					currentPanel.style.webkitTransform = 'translateY(280px)';
+					currentPanel = null;
+				}
+			}
+			
+			//关闭弹出的选择面板
+			function hidePickerPanel () {
+				_hidePickerPanel();
+				mask.close();
+			}
+			picktime();
+			picktip();
+			function picktip(){
+				    var showtipPickerBtn = document.querySelector('#showtipPicker');
+					var tipPickerPanel = document.querySelector('.tip-panel');
+					var tipPickerOKBtn = document.querySelector('#tipPickerOKBtn');
+					var tipPickerCancelBtn = document.querySelector('#tipPickerCancelBtn');
+					var tipPicker = document.querySelector('#tipPicker');
+					var tip=[{
+						text:"5"		
+					},{
+						text:"10"
+					},{
+						text:"15"
+					},{
+						text:"20"
+					},{
+						text:"25"
+					},{
+						text:"30"
+					},{
+						text:"40"
+					},{
+						text:"50"
+					},{
+						text:"60"
+					},{
+						text:"70"
+					}];
+					tipPicker.setItems(tip);
+					var showtipPanel = function() {
+//						mask.style.display = 'block';
+						mask.show();
+						currentPanel = tipPickerPanel;
+						tipPickerPanel.style.webkitTransform = 'translateY(0px)';
+					};
+					showtipPickerBtn.addEventListener('tap',showtipPanel, false);
+					tipPickerOKBtn.addEventListener('tap', function() {
+						var v = tipPicker.getSelectedText();
+						document.querySelector("#js_tip_price").innerText=v;
+						order_info.tip_price=v;
+						hidePickerPanel();
+					}, false);
+					tipPickerCancelBtn.addEventListener('tap', hidePickerPanel, false);
+			}
+			//时间选择
+			function picktime(){	
+					var minDate=GetDateStr(0),minm="";
+					var midDate=GetDateStr(1),midm="";
+					var maxDate=GetDateStr(2),maxm="";
+				    var showDatePickerBtn = document.querySelector("#datetime");
+					var datePickerPanel = document.querySelector('.date-panel');
+					var cancelBtn = document.querySelector('#datePickerCancel');
+					var oKBtn = document.querySelector('#datePickerOK');
+					var monthPicker = document.querySelector('#monthPicker');
+					var hourPicker = document.querySelector('#hourPicker');
+					var minutePicker=document.querySelector("#minutePicker");
+					var order_time = document.querySelector('#order_time');
+					//时间列表数据
+					var months=[{
+						text:minDate[1]+"月"+minDate[2]+"(今天)",
+						value:minDate
+					},{
+						text:midDate[1]+"月"+midDate[2]+"(明天)"	,
+						value:midDate
+					},{
+						text:maxDate[1]+"月"+maxDate[2]+"(后天)",
+						value:maxDate
+					}];
+					var hours=[],minutes=[];
+					for (var i=0;i<24;i++) {
+						var hobj={
+							value:"",
+							text:""
+						}
+						hobj.text=i;
+						hobj.value=i;
+						hours.push(hobj);
+					}
+					for(var i=0;i<70;i+=10){
+						
+						var mobj={
+							value:"",
+							text:""
+						}
+						mobj.text=i;
+						mobj.value=i;
+						minutes.push(mobj);
+					}
+					var showDatePanel = function() {
+						mask.show();
+						currentPanel = datePickerPanel;
+						datePickerPanel.style.webkitTransform = 'translateY(0px)';
+					};
+					
+					showDatePickerBtn.addEventListener('tap',function(){
+						hourPicker.setSelectedValue(minDate[3]);
+						showDatePanel()
+					}, false);
+					cancelBtn.addEventListener('tap', hidePickerPanel, false);
+					//确定按钮
+					oKBtn.addEventListener('tap', function() {
+						minm=monthPicker.getSelectedValue()
+						order_info.order_time=minm[0].toString()+minm[1].toString()+minm[2].toString()+hourPicker.getSelectedValue()+minutePicker.getSelectedValue();
+						document.querySelector("#time").innerHTML=minm[0].toString()+"-"+minm[1].toString()+"-"+minm[2].toString()+" "+hourPicker.getSelectedText()+":"+minutePicker.getSelectedText();
+						hidePickerPanel();
+					}, false);
+					//绑定
+					monthPicker.setItems(months);
+					hourPicker.setItems(hours);
+					minutePicker.setItems(minutes);
+			}
+			});
+		var time="",sign="",Waiting="";
+		function getPriceInfo(d){
+			time = Date.parse(new Date());
+			order_info.t=time;
+			sign=hex_md5(session_id+time+config.com.userId);
+			order_info.s=sign;
+			Waiting = plus.nativeUI.showWaiting("正在加载...");
+			mui.ajax(config.url.host+"/get_price_info",{
+				data:{
+					user_id:config.com.userId,
+					truck_type:d.truck_type,
+					start_lat:d.start_lat,
+					start_lng:d.start_lng,
+					start_address:d.start_address,
+					end_lat:d.end_lat,
+					end_lng:d.end_lng,
+					end_address:d.end_address,
+					t:time,
+					s:sign
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'POST',//HTTP请求类型
+				success:function(info){
+					Waiting.close();
+					if(info.code==1000){
+						rendy(info);
+					}else{
+						mui.toast(info.message);
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					Waiting.close();
+					console.log(type);
+					mui.toast(config.err.xhr);
+				}
+			});
+		}
+		function  rendy(info){
+			document.querySelector("#price_block").classList.remove('hide');
+			document.querySelector("#js_tip_price").innerHTML=info.data.tip_price;
+			document.querySelector("#distance").innerHTML=info.data.distance;
+			document.querySelector("#duration").innerHTML=info.data.duration;
+			document.querySelector("#order_price").innerHTML=info.data.order_price;
+			document.querySelector("#market_price").innerHTML=info.data.market_price;
+			order_info.tip_price=info.data.tip_price;
+			
+		}
+		function inputRendy(data,t){	
+			var html="";
+				html+="<div class=''>";
+				if(data[t+'_name']!="null"){
+					html+="<span class='name'>"+data[t+'_name']+"</span>";	
+				}			
+					html+="<span class='address'>"+data[t+'_address']+"</span>";
+				html+="</div>";
+				html+="<div> ";
+					html+="收货人：<span class='username'>"+data[t+'_consignee']+"</span> 电话：<span class='mobile'>"+data[t+'_mobile']+"</span>";
+				html+="</div>";
+
+                return html;
+		}
+		
+		function ajax(){
+			var Waiting = plus.nativeUI.showWaiting("正在加载...");
+			mui.ajax(config.url.host+"/order_new",{
+				data:order_info,
+				dataType:'json',//服务器返回json格式数据
+				type:'POST',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(d){
+					Waiting.close();
+					if(d.code==1000){
+							var id = d.data.order_id;
+							var self=plus.webview.currentWebview();
+							mui.alert('恭喜您，下单成功，已经推送给'+d.data.count+'位司机','提示','查看',function(){		           
+						  	var w = plus.webview.create(
+								     'order_detail.html',
+					     			 "order_detail.html",
+					     			 {},
+								     {
+									     order_id:id,
+									     back_index:true
+									 }
+								  );
+								w.show("","",function(){
+									self.hide();
+									self.close();
+								})
+						  	});	
+					}else{
+						mui.toast(d.message);
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					mui.toast(config.err.xhr);
+					console.log(type);
+					
+				}
+			});
+		}
+		function checkData(){
+			var t=false;
+			if(order_info.start_address==""){
+						mui.toast('请填写发货地址');
+						t=false;
+					}else if(order_info.end_address==""){
+						mui.toast('请填写收货地址');
+						t=false;	
+					}else{
+						t=true;
+					}
+			return t;
+		}	
+	</script>
+</html>

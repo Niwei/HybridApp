@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/mbase.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav"></a>
+			<h1 id="title" class="mui-title">e货车</h1>
+		</header>
+		<script src="js/mui.min.js"></script>
+		<script src="js/update.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			mui.init();
+			var subpages ="";
+			var subpage_style = {
+				top: '46px'
+			};
+			var self = null;
+			 //创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				subpages=self.href;
+				document.querySelector("#title").innerHTML=self.title;
+				var sub = plus.webview.create(subpages,subpages,subpage_style);
+				self.append(sub);	
+			});
+		</script>
+	</body>
+
+</html>
