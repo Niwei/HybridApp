@@ -1,0 +1,68 @@
+/*公共样式*/
+html {font-size:20px;}
+body {font-size:14px;background:#eceff3;font-family: "Segoe UI", "Microsoft YaHei", sans-serif;}
+table{border-collapse:collapse;border-spacing:0;}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400;}
+ul,ol,li{list-style:none;}
+em,i{font-style:normal;}
+strong,b{font-weight:normal;}
+img{border:0;}
+input,img{vertical-align:middle;}
+a{text-decoration:none;}
+*{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+input,select,textarea{-webkit-tap-highlight-color:rgba(0,0,0,0);border:0;border-radius:0;-webkit-appearance:none;}
+textarea:focus{outline:0;}
+a{}
+b {font-weight: bold;}
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}
+/*容器*/
+.viewport{max-width:750px;min-width:320px;position: relative;margin: 0 auto;background:#fff;}
+.cf:before,.cf:after {content:"\200B"; display:block; height:0; clear:both;} 
+.fl{float:left;}
+.fr{float:right;}
+.hide{display:none;}
+/* Font color */
+.purple_font{color:#8554b0;}
+.yellow_font{color:#f5a623;}
+.or_font{color:#e43d74;}
+.green_font{color:#2cc05c;}
+.red_font{color:#F00;}
+.red_font a{color:red;}
+.grey_font{color:#bbb;}
+.dgrey_font{color:#7a7a7a;}
+.black_font{color:#000;}
+.font14{font-size:14px;}
+.f12{ font-size:12px;}
+.f14{ font-size:14px;}
+.f16{ font-size:16px;}
+.f18{ font-size:18px;}
+.black{color:#000;}
+.white{color:#fff;}
+.grey{color:#999;}
+.red{color:#c00;}
+.green{color:#090;}
+.blue{ color:#467C9E;}
+.bold{font-weight:bold;}
+/* Margin width */
+.mt5{margin-top: 5px;}
+.mr5{margin-right: 5px;}
+.mb5{margin-bottom: 5px;}
+.ml5{margin-left: 5px;}
+
+.mt10{margin-top: 10px;}
+.mr10{margin-right: 10px;}
+.mb10{margin-bottom: 10px;}
+.ml10{margin-left: 10px;}
+
+.mt20{margin-top: 20px;}
+.mr20{margin-right: 20px;}
+.mb20{margin-bottom: 20px;}
+.ml20{margin-left: 20px;}
+/*padding width*/
+/* Align Style */
+.tl{text-align: left;}
+.tc{text-align: center;}
+.tr{text-align: right;}
+
+
+

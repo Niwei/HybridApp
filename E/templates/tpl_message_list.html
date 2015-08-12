@@ -1,0 +1,7 @@
+{{for(var i in it){ }}
+	<li class="mui-table-view-cell" data-id = "{{=it[i].order_id}}">
+	    <a class="mui-navigate-right">
+	      {{=it[i].title}}
+	    </a>
+	</li>
+{{ } }}

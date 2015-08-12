@@ -1,0 +1,76 @@
+/*
+ *这是单独为hello mui准备的个性化css，可以覆盖标准mui的css定义；
+ * 在实际项目开发时，建议为App单独写一个css文件，从而实现项目的自定义皮肤功能；
+ * 
+ * */
+.cf:before,.cf:after {content:"\200B"; display:block; height:0; clear:both;}
+.fl{float:left;}
+.fr{float:right;}
+.hide{display:none;}
+/*重置样式*/
+.mui-bar-nav{background-color:#39b44a;}
+.mui-title{color:#fff;}
+.mui-action-back{color:#fff;}
+.input-group {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background-color: #fff;
+}
+.input-group .input-row {
+  height: 40px;
+  clear: left;
+  overflow: hidden;
+  position: relative;
+}
+.input-group label {
+  width: 25%;
+  font-family: 'Helvetica Neue',Helvetica,sans-serif;
+  line-height: 1.1;
+  float: left;
+  padding: 10px 15px;
+}
+.input-group .input-row input{
+  background-image: none;
+  width: 95%;
+  margin:0 auto;
+  margin-bottom: 0;
+  padding-left: 0;
+  border: 0;
+  text-indent:3%;
+}
+.input-group .input-row:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 1px;
+  content: '';
+  -webkit-transform: scaleY(.5);
+  transform: scaleY(.5);
+  background-color: #c8c7cc;
+  width:98%;
+  margin-left:-49%;
+}
+#modify,#login{margin-top:10px;margin-bottom:0;}
+.link-area {
+    display: block;
+    margin-top: 25px;
+    text-align: center;
+		}
+.spliter {
+    color: #bbb;
+    padding: 0px 8px;
+}
+#mobile_v.verifi-btn{display:block;border:0;width:100%;border-radius: 0px;
+background:#FF0000;
+border-top-left-radius: 0px;
+border-top-right-radius: 0px;
+border-bottom-right-radius: 0px;
+border-bottom-left-radius: 0px;
+height:40px;
+color:#fff;
+}
+#mobile_v.verifi-btn.disabled{background:#7A7A7A;}
+#xieyi_block{margin:10px 0;}
+#xieyi_block label{width:auto;}
+			

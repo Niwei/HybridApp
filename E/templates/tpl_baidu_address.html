@@ -1,0 +1,8 @@
+<ul>
+{{for(var i=0; i<it.getCurrentNumPois(); i++){ }}
+	<li data-lat={{=it.getPoi(i).point.lat}} data-lng={{=it.getPoi(i).point.lng}} data-title={{=it.getPoi(i).title}} data-address={{=it.getPoi(i).address}} data-name={{=it.getPoi(i).title}}>
+		<p>{{=it.getPoi(i).title}}</p> 
+		<p>{{=it.getPoi(i).address}}</p>
+	</li>
+{{ } }}
+</ul>

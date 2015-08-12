@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/mlayout.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mbase.css"/>
+		<style>
+			.mui-bar .mui-btn-link{color:#fff;}
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 300ms ease;
+				transition: transform 300ms ease;
+			}
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			.mui-page {
+				display: none;
+			}
+			.mui-pages .mui-page {
+				display: block;
+			}
+			
+			.tel-book{position:absolute;height:1.5rem;background:#008000;top:50%;margin-top:-0.75rem;color:#fff;border:0px;padding:0 0.5rem;right:3%;}
+		</style>
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+		<!--主信息-->
+		<div id="address-info" class="mui-page">
+			<div class="mui-page-content">
+				<div class="mui-navbar-inner mui-bar mui-bar-nav">
+					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+						<span class="mui-icon mui-icon-left-nav"></span>
+					</button>
+					<h1 class="mui-center mui-title">添加地址</h1>
+				</div>
+				<div class="adress-block">
+					<div class="address-border">
+					<a class="icon-input" href="#account" id="add_address">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_addr_start.png"/></p>
+						<div class="content"><p id="add_address_text">添加地址</p></div>
+					</a>
+					<div class="icon-input">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_consignee.png"/></p>
+						<div class="content"><input class="" type="text" name="consignee" id="consignee" placeholder="请输入姓名"   value=""/></div>
+						<button class="tel-book" id="tel_book">通讯录</button>
+					</div>
+					<div class="icon-input">
+						<p class="icon"><img src="../../images/drawable-hdpi/order_mobile.png"/></p>
+						<div class="content"><input class="" type="text" name="mobile" id="mobile" placeholder="请输入电话号码"  value=""/></div>
+					</div>
+					</div>
+					<button  class="mui-btn mui-btn-positive mui-btn-block order-btn"  id="sure"/>确认</button>
+				</div>
+			</div>
+		</div>
+		<!--主信息 end-->
+		<div id="account" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">输入地址</h1>
+			</div>
+			<div class="mui-page-content">
+				<div id="search_address" class="search-address">
+					<div class="icon-input">
+						<p class="icon"><img src="../../images/drawable-hdpi/ic_search_app_left.png"/></p>
+						
+						<div class="content"><input type="text" name="search_text" id="search_text" value="" placeholder="请输入地点关键字" autocomplete="off"/></div>
+					</div>
+					<div class="mui-scroll-wrapper search-result-top">
+						<div class="mui-scroll">
+							<div id="search_result">
+								
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>58
+		</div>
+		
+	</body>
+	<script src="../../js/global.js" ></script>
+	<script src="../../js/config.js" ></script>
+	<script src="../../js/doT.min.js" ></script>
+	<script src="../../js/zepto.min.js" ></script>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/mui.view.js" ></script>
+	<script src="http://api.map.baidu.com/api?v=1.5&ak=yMvNdV1I9PlbSrlHvFPnGeHK"></script>
+	<script>
+		mui.init({
+				swipeBack: false,
+//				beforeback:function(){
+//					var backPage = plus.webview.getWebviewById('place_order.html'); //a为 a页面的id值
+//					mui.fire(backPage,'custom',{a:120});
+//				}
+			});
+		var Intent,ContactsContract="";
+		mui.plusReady(function(){
+			Intent = plus.android.importClass('android.content.Intent');
+			ContactsContract = plus.android.importClass('android.provider.ContactsContract');
+ 			document.querySelector("#tel_book").addEventListener("tap",function(){
+ 				find();
+ 			},false)
+		}); 
+		function find(){
+			var REQUESTCODE = 1000;
+			main = plus.android.runtimeMainActivity();
+			var intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+			main.onActivityResult = function(requestCode, resultCode, data) { 
+			if (REQUESTCODE == requestCode) {
+			    var phoneNumber = null;
+			    var resultString = "";
+			    var context = main;
+			    plus.android.importClass(data);
+			    var contactData = data.getData();
+			    var resolver = context.getContentResolver();
+			    plus.android.importClass(resolver);
+			    var cursor = resolver.query(contactData, null, null, null, null);
+			    plus.android.importClass(cursor);
+			    cursor.moveToFirst();
+			    var s_ret;
+			    var givenName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+			    s_ret = givenName;
+			    var contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+			    var pCursor = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+			     null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+			     null, null);
+			    while (pCursor.moveToNext()) {
+			     phoneNumber =   pCursor.getString( pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			     s_ret += '\n' + phoneNumber;
+			    }
+			    alert(s_ret);
+			    cursor.close();
+			    pCursor.close();
+			    
+			  }
+			};
+			main.startActivityForResult(intent, REQUESTCODE);
+		}
+		mui.ready(function(){
+			
+		})
+		var viewApi = mui('#app').view({
+			defaultPage: '#address-info'
+		});
+		var info={
+			consignee:"",
+			mobile:"",
+			lat:"",
+			lng:"",
+			address:"",
+			name:""
+		};
+		 //初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+		var table=document.getElementById("search_result"),tpl_commont="",tpl = "";
+		 document.getElementById("sure").addEventListener("tap",function(e) {
+			 info.consignee=document.querySelector("#consignee").value;
+			 info.mobile=document.querySelector("#mobile").value;
+			 if(ckdata()){
+				var old_back = mui.back;
+				var pageId = plus.storage.getItem("pageId")
+			 	var detailPage = plus.webview.getWebviewById(pageId);
+				 mui.back=function(){
+				  mui.fire(detailPage,'custom',{
+				    data:info
+				  });
+					old_back()
+				 };
+				mui.back();
+				//打开详情页面
+			};
+			});
+			var view = viewApi.view;
+			(function($) {
+				//处理view的后退与webview后退
+				var oldBack = $.back;
+				$.back = function() {
+					if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+						viewApi.back();
+						cleardata()
+					} else { //执行webview后退
+						oldBack();
+						cleardata()
+					}
+				};
+	
+			})(mui);
+	
+			// 百度地图API功能
+				
+				var options = {
+					
+					onSearchComplete: function(results){
+						// 判断状态是否正确
+						if (local.getStatus() == BMAP_STATUS_SUCCESS){
+							 
+							 if(!tpl_commont) {
+			                    // 获取模板
+			                    GLOBAL.setTpl('../../templates/tpl_baidu_address.html', 'tpl_baidu_address', function(tmp){
+		                            tpl_commont=tmp;
+		          					tpl=doT.template(tmp||tpl_commont);
+		            				table.innerHTML=tpl(results);
+		                    	});
+			                }else{
+			                		tpl = doT.template(tpl_commont);
+			                		table.innerHTML=tpl(results);
+			                }
+						}
+					},
+					pageCapacity:20
+					
+				};
+				
+				var local = new BMap.LocalSearch("深圳",options);
+				function ksearch(val){
+					local.search(val);
+				}
+				var keyop=document.querySelector("#search_text"),lat=document.querySelector("#lat"),lng=document.querySelector("#lng"),at=document.querySelector("#add_address_text");		
+				keyop.addEventListener("input",function(e){
+					var keyword = this.value;
+					throttle(ksearch(keyword),100,200);
+				},false)
+				mui("#search_result").on("tap","li",function(e){
+					info.lat=this.dataset.lat;
+					info.lng=this.dataset.lng;
+					info.address=this.dataset.address;
+					info.name=this.dataset.name;
+					at.innerHTML=this.dataset.title+info.address;
+					cleardata();
+					mui.back();
+				})
+				function ckdata(){
+					var t = false;
+					if(info.address==""){
+						mui.toast('请输入地址');
+						t=false;
+					}else if(info.consignee==""){
+						mui.toast('请输入名字');
+						return false;
+						t=false;
+					}else if(info.mobile==""){
+						mui.toast('请输入电话');
+						return false;
+						t=false;
+					}else{
+						t=true;
+					}
+					return t;
+				}
+				function cleardata(){
+					document.querySelector("#search_text").value="";
+				   	document.querySelector("#search_result").innerHTML="";
+				}
+				
+	</script>
+</html>

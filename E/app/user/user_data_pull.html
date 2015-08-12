@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/mlayout.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mbase.css"/>
+		<style>
+			#pullrefresh{top:0px;position:relative;}
+			.mui-scroll {
+  position: relative;}
+		</style>
+	</head>
+	<body>
+		<!--数据列表-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				
+				<div  class="info-block">
+					<ul>
+						<li class="cf">
+							<span class="fl">姓名：</span> 
+							<div class="fl left-block"><span  id="nickname"></span></div> 	
+						</li>
+						<li class="cf"><span class="fl">电话：</span> <div class="fl left-block"><span class="mobile" id="mobile"></span></div></li>
+						<li class="cf"><span class="fl">用户：</span> <div class="fl left-block"><span class="is-company" id="is_company"></span></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../../js/md5-min.js"></script>
+	<script src="../../js/global.js" ></script>
+	<script src="../../js/config.js" ></script>
+	<script src="../../js/mui.min.js"></script>
+	<script>
+		mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					}
+				}
+		});
+		mui.plusReady(function(){
+			var user_data=config.getInfo();
+			if(user_data===null){
+				mui.toast("请登录")
+			}else{
+				tel(user_data);
+			}
+			
+		})
+		/**
+		 * 下拉刷新具体业务实现
+		 */
+		function pulldownRefresh() {
+			ajax();
+		}
+		var Waiting=null,time="",sign="",session_id="",tpl_commont="",tpl = "",
+			ajax_status=true;
+		function ajax(){
+				session_id = config.getInfo().app_session_id||{};
+				ajax_status=false;
+				time = Date.parse(new Date())
+				sign=hex_md5(session_id+time+config.com.userId)
+				mui.ajax(config.url.host+"/get_info",{
+				dataType:'json',//服务器返回json格式数据
+				type:'POST',//HTTP请求类型
+				data:{
+					user_id:config.com.userId,
+					t:time,
+					s:sign
+				},
+				timeout:10000,//超时时间设置为10秒；
+				success:function(info){
+					if(info.code==1000){
+						tel(info.data);
+					}else{
+						mui.toast(info.message)
+					}
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					ajax_status=true;
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					ajax_status=true;
+					console.log(type);
+					mui.toast(type);
+				}
+			});
+				
+			}
+		function tel(data){
+			for(var i in data){
+				if(document.querySelector("#"+i)){
+					document.querySelector("#"+i).innerHTML=data[i];
+					if(data["is_company"]==0){
+						document.querySelector("#is_company").innerHTML="个人用户";
+					}else if(data["is_company"]!=0){
+						document.querySelector("#is_company").innerHTML="集团用户";
+					}
+						
+				}
+				
+				
+			}
+		}
+	</script>
+</html>

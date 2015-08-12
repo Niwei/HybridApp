@@ -1,0 +1,55 @@
+{{~it:item:index}}
+<div class="item-list{{? !item.product_vaild}} item-disabled{{??}}{{?}} {{? index%2!=0}}item-even{{??}}{{?}}">
+    <ul>
+        <li class="td-chk">
+            <input {{? !item.product_vaild}}disabled{{?}} type="checkbox" class="js-check" {{? item.is_check&&item.product_vaild}}checked="checked"{{??}}{{?}} data-index="{{=index}}" data-skuid="{{=item.sku_id}}" name="buy_goods[{{=item.sku_id}}]">
+        </li>
+        <li class="td-item">
+            <div class="fl item-img">
+                <a href="/products/detail/{{=item.product_id}}" target="_blank">
+                    <img width="175" height="175" src="{{=item.pic_url.replace('100x100', '220x220')}}">
+                </a>
+            </div>
+        </li>
+        <li class="td-info">
+            <div class="item-info">
+                <a href="/products/detail/{{=item.product_id}}" target="_blank">{{=item.main_title}}</a>
+            </div>
+            {{~item.pops:pops:i}}
+                <p>{{=item.pops[i]}}</p>
+            {{~}}               
+        </li>
+        <li class="td-price f-price">
+            <span class="f14 bold">¥</span><span class="sku_price f14"> {{=item.price}}</span><br>
+        </li>
+        <li class="td-count">
+            {{? !item.product_vaild}}
+            <span>{{=item.buy_num}}</span>
+            {{??}}
+                {{ if(item.quantity==1){ }}
+                    孤品
+                {{ }else{ }}
+                    <a class="down ie-count" href="###">-</a>
+                    <input type="text" class="js-sku c-text-ie c_text" data-index="{{=index}}" data-skuid="{{=item.sku_id}}" name="quantity[{{=item.sku_id}}]" value="{{=item.buy_num}}" max="{{=item.quantity}}">
+                    <a class="up ie-count" href="###">+</a>
+                {{ } }}
+            {{?}}
+
+        </li>
+        <li class="td-money f-price">
+            <span class="red f14 bold">¥ </span><span class="red cs_price f14"> {{=(item.price*item.buy_num).toFixed(2)}}</span>
+        </li>
+        <li class="td-op">
+            <a href="###" data-id="{{=item.sku_id}}" data-index="{{=index}}" class="js-del">删除</a>
+        </li>
+    </ul>
+    {{? !item.product_vaild}}
+    <div class="item-disabled-box">
+        <div class="arrow"></div>
+        <div class="text">
+            此作品已出售！<a href="/products/goods_list/{{=item.cid}}/">查看相似作品</a>
+        </div>
+    </div>
+    {{??}}{{?}}
+</div>
+{{~}}

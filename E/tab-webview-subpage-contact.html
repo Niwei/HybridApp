@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="css/mlayout.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mbase.css"/>
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.mui-content>.mui-table-view:first-child {
+  				margin-top:0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="me-block" id="me_block">
+				<ul class="">
+					<li class="icon-input ui-more" data-href = "/app/user/user_data.html"  id="my_data.html">
+						<p class="icon"><img src="images/drawable-hdpi/i_profile.png"/></p>
+						<div class="content">我的资料</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "/app/user/modify_password.html"  id="modify_password.html">
+						<p class="icon"><img src="images/drawable-hdpi/i_modify.png"/></p>
+						<div class="content">修改密码</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "/app/order/assess.html" id="assess.html">
+						<p class="icon"><img src="images/drawable-hdpi/i_review.png"/></p>
+						<div class="content">订单评价</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "/app/user/message.html"  id="message.html">
+						<p class="icon"><img src="images/drawable-hdpi/i_message.png"/></p>
+						<div class="content">我的消息</div>
+					</li>
+					<li class="icon-input ui-more" data-href = "/app/address/common_address.html"  id="common_address.html">
+						<p class="icon"><img src="images/drawable-hdpi/order_phone_book.png"/></p>
+						<div class="content">常用线路</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack:false //启用右滑关闭功能
+		});
+		mui("#me_block").on("tap","li",function(){
+			var href = this.dataset.href;
+			var id = this.id;
+			if(id==="common_address.html"){
+				plus.storage.setItem("isedit","ok");
+			}
+			mui.openWindow({
+		     id:id,
+		     url:href
+		})
+		})
+	</script>
+</html>

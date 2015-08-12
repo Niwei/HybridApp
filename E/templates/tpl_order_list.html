@@ -1,0 +1,19 @@
+{{~it:item:index}}
+	<li class="" data-id={{=item.id}}>
+		<div class="no cf"><span class="fl">{{=item.order_no}}</span> <span class="fr or_font">{{=config.order[item.status]}} </span></div>
+		<div class="icon-input">
+			<p class="icon"><img src="images/drawable-hdpi/icon_start_circle.png"/></p>
+			<div class="content">{{=item.start_name?item.start_name:""}} {{=item.start_address}}</div>
+		</div>
+		<div class="icon-input">
+			<p class="icon"><img src="images/drawable-hdpi/icon_end_circle.png"/></p>
+			<div class="content">{{=item.end_name?item.end_name:""}} {{=item.end_address}}</div>
+		</div>
+		<div class="other-infro cf">
+			<span class="grey_font">{{=formatDate(item.add_time)}}</span>
+			<span class="fr or_font">￥{{=item.system_price}}</span>
+			<span class="fr green_font">{{=config.car[item.truck_type].name}}</span>
+		</div>
+	</li>
+{{~}}
+

@@ -1,0 +1,38 @@
+<ul>
+{{~it:data:index}}
+	<li data-start_name={{=data.start_name}} data-address_id={{=data.id}} data-start_address={{=data.start_address}} data-start_lat={{=data.start_lat}} data-start_lng={{=data.start_lng}} data-start_mobile={{=data.start_mobile}} 
+	data-start_consignee={{=data.start_consignee}} data-end_name={{=data.end_name}} data-end_address={{=data.end_address}} data-end_lat={{=data.end_lat}} data-end_lng={{=data.end_lng}} 
+	data-end_consignee={{=data.end_consignee}} data-end_mobile={{=data.end_mobile}} data-name = {{=data.name}}>
+		<div class="icon-input">
+			<p class="icon"><img src="../../images/drawable-hdpi/order_address_name.png"/></p>
+			<div class="content">
+				<div class="address-name">{{=data.name}}</div>
+			</div>
+		</div>
+		<div class="icon-input">
+			<p class="icon"><img src="../../images/drawable-hdpi/order_addr_start.png"/></p>
+			<div class="content start-address-block">
+				<div class="start-address">
+					{{ if(data.start_name!="null"){ }}
+					{{=data.start_name}}
+					{{ } }}
+					{{=data.start_address}}
+				</div>
+				<div>收货人：<span class="consignee">{{=data.start_consignee}}</span> 电话：<span class="mobile">{{=data.start_mobile}}</span></div>
+			</div>
+		</div>
+		<div class="icon-input">
+			<p class="icon"><img src="../../images/drawable-hdpi/order_addr_end.png"/></p>
+			<div class="content">
+				<div class="end-address">
+					{{ if(data.end_name!=="null"){ }}
+					{{=data.end_name}}
+					{{ } }}
+					{{=data.end_address}}
+				</div>
+				<div>收货人：<span class="consignee or_font">{{=data.end_consignee}}</span> 电话：<span class="mobile or_font">{{=data.end_mobile}}</span></div>
+			</div>
+		</div>	
+	</li>
+{{~}}
+</ul>
